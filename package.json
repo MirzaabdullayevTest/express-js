@@ -1,0 +1,24 @@
+{
+  "name": "express-js",
+  "version": "1.0.0",
+  "description": "Express js for learing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MirzaabdullayevTest/express-js.git"
+  },
+  "author": "Mirzaabdullayev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MirzaabdullayevTest/express-js/issues"
+  },
+  "homepage": "https://github.com/MirzaabdullayevTest/express-js#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
