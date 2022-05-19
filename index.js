@@ -5,18 +5,25 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 // const path = require('path')
 
+// Dotenv
+require('dotenv').config()
+
 // Middlewares 
 const authMiddleware = require('./middleware/auth')
 const loggerMiddleware = require('./middleware/logger')
 
 app.use(express.json()) // json // requestlar uchun // req body ni json formatga aylantirib beradi
 
+// urlencoded request
+app.use(express.urlencoded({ extended: true }))
+
 // HTTP headers security middleware
 app.use(helmet())
 
 // Logger
 // console.log(app.get('env'));
-if (app.get('env') === 'development') {
+// console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development') {
     app.use(morgan('tiny'))
 }
 
@@ -89,6 +96,8 @@ app.post('/api/books/add', (req, res) => {
     // Baza chaqiramiz
     let allBooks = books  // []
 
+    console.log(req.body);
+
     // Validatsiya // hiyalaymiz
     let bookSchema = Joi.object({
         name: Joi.string().min(3).max(30).required(),
@@ -147,7 +156,9 @@ app.delete('/api/books/delete/:id', (req, res) => {
 })
 
 try {
-    const port = process.env.port || 5000
+    const port = process.env.PORT || 5000
+
+    console.log(port);
 
     app.listen(port, () => {
         console.log('Server working on port', port);
