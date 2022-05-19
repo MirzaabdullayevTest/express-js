@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const Joi = require('joi')
 const helmet = require('helmet')
+const morgan = require('morgan')
 // const path = require('path')
 
 // Middlewares 
@@ -13,6 +14,12 @@ app.use(express.json()) // json // requestlar uchun // req body ni json formatga
 // HTTP headers security middleware
 app.use(helmet())
 
+// Logger
+// console.log(app.get('env'));
+if (app.get('env') === 'development') {
+    app.use(morgan('tiny'))
+}
+
 const books = [
     { name: 'Atomic habits', year: 2000, id: 1 },
     { name: 'Harry potter', year: 2008, id: 2 },
@@ -20,11 +27,11 @@ const books = [
 ]
 
 // Custom middleware
-app.use(authMiddleware)
+// app.use(authMiddleware)
 app.use(loggerMiddleware)
 
 // GET method // Read
-app.get('/', (req, res) => {
+app.get('/', authMiddleware, (req, res, next) => {
     // console.log(req.url);
     // res.sendFile(path.join(__dirname, 'views', 'index.html'), (err) => {
     //     if (err) {
