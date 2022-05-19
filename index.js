@@ -1,9 +1,17 @@
 const express = require('express')
 const app = express()
 const Joi = require('joi')
+const helmet = require('helmet')
 // const path = require('path')
 
+// Middlewares 
+const authMiddleware = require('./middleware/auth')
+const loggerMiddleware = require('./middleware/logger')
+
 app.use(express.json()) // json // requestlar uchun // req body ni json formatga aylantirib beradi
+
+// HTTP headers security middleware
+app.use(helmet())
 
 const books = [
     { name: 'Atomic habits', year: 2000, id: 1 },
@@ -11,10 +19,9 @@ const books = [
     { name: 'Rich dad and poor dad', year: 2010, id: 3 },
 ]
 
-app.use((req, res, next) => {
-    console.log('Autentifikatsiya qilish!');
-    next()
-})
+// Custom middleware
+app.use(authMiddleware)
+app.use(loggerMiddleware)
 
 // GET method // Read
 app.get('/', (req, res) => {
