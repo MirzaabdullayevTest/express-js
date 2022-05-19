@@ -11,6 +11,11 @@ const books = [
     { name: 'Rich dad and poor dad', year: 2010, id: 3 },
 ]
 
+app.use((req, res, next) => {
+    console.log('Autentifikatsiya qilish!');
+    next()
+})
+
 // GET method // Read
 app.get('/', (req, res) => {
     // console.log(req.url);
@@ -85,6 +90,7 @@ app.post('/api/books/add', (req, res) => {
         name: req.body.name,
         year: req.body.year
     }
+
     // bazaga qo'shamiz
     allBooks.push(book)
 
