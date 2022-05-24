@@ -4,9 +4,13 @@ const Joi = require('joi')
 const helmet = require('helmet')
 const morgan = require('morgan')
 // const path = require('path')
+const pug = require('pug') // View engine
 
 // Dotenv
 require('dotenv').config()
+
+// View engine
+app.set('view engine', 'pug')
 
 // Middlewares 
 const authMiddleware = require('./middleware/auth')
@@ -39,13 +43,18 @@ app.use(loggerMiddleware)
 
 // GET method // Read
 app.get('/', authMiddleware, (req, res, next) => {
-    // console.log(req.url);
-    // res.sendFile(path.join(__dirname, 'views', 'index.html'), (err) => {
-    //     if (err) {
-    //         console.log(err);
-    //     }
-    // })
-    res.send('Bu asosiy sahifa')
+    const text = 'Hello from index'
+    res.render('index.pug',
+        {
+            title: 'Pug engine', heading: text, books
+        })
+})
+
+app.get('/about', authMiddleware, (req, res, next) => {
+    res.render('about.pug',
+        {
+            title: 'About', books
+        })
 })
 
 app.get('/api/books', (req, res) => {
@@ -157,13 +166,9 @@ app.delete('/api/books/delete/:id', (req, res) => {
 
 try {
     const port = process.env.PORT || 5000
-
-    console.log(port);
-
     app.listen(port, () => {
         console.log('Server working on port', port);
     })
-
 } catch (error) {
     console.error(error);
 }
