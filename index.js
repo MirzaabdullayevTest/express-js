@@ -3,6 +3,7 @@ const app = express() // object // {}
 const helmet = require('helmet')
 const morgan = require('morgan')
 const path = require('path')
+const { create } = require('express-handlebars')
 
 // Importing routes
 const homeRouter = require('./routes/home')
@@ -12,8 +13,15 @@ const booksRouter = require('./routes/books')
 // Dotenv
 require('dotenv').config()
 
+const exhbs = create({
+    extname: 'hbs',
+    defaultLayout: 'layout'
+})
+
 // View engine
-app.set('view engine', 'pug')
+app.engine('hbs', exhbs.engine)
+app.set('view engine', 'hbs');
+app.set('views', './views');
 
 // Static folder
 app.use(express.static(path.join(__dirname, 'public')))
