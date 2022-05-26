@@ -3,14 +3,16 @@ const app = express()
 const Joi = require('joi')
 const helmet = require('helmet')
 const morgan = require('morgan')
-// const path = require('path')
-const pug = require('pug') // View engine
+const path = require('path')
 
 // Dotenv
 require('dotenv').config()
 
 // View engine
 app.set('view engine', 'pug')
+
+// Static folder
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Middlewares 
 const authMiddleware = require('./middleware/auth')
@@ -43,17 +45,19 @@ app.use(loggerMiddleware)
 
 // GET method // Read
 app.get('/', authMiddleware, (req, res, next) => {
-    const text = 'Hello from index'
-    res.render('index.pug',
+    res.render('index',
         {
-            title: 'Pug engine', heading: text, books
+            title: 'Index',
+            text: 'This is index.js',
+            isHome: true,
         })
 })
 
 app.get('/about', authMiddleware, (req, res, next) => {
-    res.render('about.pug',
+    res.render('about',
         {
-            title: 'About', books
+            title: 'About',
+            isAbout: true
         })
 })
 
@@ -67,7 +71,13 @@ app.get('/api/books', (req, res) => {
     // res.end()
 
     // res.send(JSON.stringify(books))
-    res.send(books)
+    // res.send(books)
+
+    res.render('books', {
+        title: 'All books',
+        books,
+        isBooks: true
+    })
 })
 
 // Get request with query

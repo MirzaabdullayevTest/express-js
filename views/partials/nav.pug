@@ -1,11 +1,23 @@
 nav
   .nav-wrapper
-    a.brand-logo(href='#') Logo
+    a.brand-logo(href='/') BookStore
     ul#nav-mobile.right.hide-on-med-and-down
-      li
-        a(href='/') Sass
-      li
-        a(href='badges.html') Components
-      li
-        a(href='collapsible.html') JavaScript
+      if isHome 
+        li.active
+          a(href='/') Home
+      else  
+        li
+          a(href='/') Home
+      if isBooks 
+        li.active
+          a(href='/api/books') Books
+      else  
+        li
+          a(href='/api/books') Books
+      if isAbout
+        li.active
+          a(href='/about') About us
+      else  
+        li
+          a(href='/about') About us
 

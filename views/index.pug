@@ -1,28 +1,3 @@
 extends layouts/main
 block content
-        h1.heading= heading
-        p#id= Math.floor(Math.random() * 10)
-        p= `5 ayrilgan 6 = ${5 - 6}`
-
-        -let a= 5
-        -const b= 9
-        p= a - b
-        -const  auth= false  
-
-        if auth 
-            p you are auth ed
-        else if auth === null 
-            p#id  your  auth is null
-        else 
-            p.text you are not auth ed  
-                //- if else
-        //- For = each // iteration
-        ul
-            each book in books 
-                li(class='item' style=`color:rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`)= book.name 
-                    span=  ` ${book.year}`
-
-        a(href="/about/") Contact page 
-                
-
-            
+    h1 Hello from index
