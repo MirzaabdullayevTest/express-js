@@ -18,6 +18,13 @@ router.get('/', (req, res) => {
     })
 })
 
+router.get('/add', (req, res) => {
+    res.render('formBooks', {
+        title: 'Add new book',
+        isBooks: true
+    })
+})
+
 // Get request with query
 router.get('/sort', (req, res) => {
     const book = books.find((book) => req.query.name === book.name)
@@ -57,16 +64,25 @@ router.post('/add', authMiddleware, (req, res) => {
     let bookSchema = Joi.object({
         name: Joi.string().min(3).max(30).required(),
         year: Joi.number().integer().min(1900).max(2022).required(),
+        img: Joi.string()
     })
 
-    validateBody(req.body, bookSchema, res)
+    const result = bookSchema.validate(req.body)
+    // console.log(!!result.error);  // error bor bo'lsa true yo'q bo'lsa false deydi
+
+    if (result.error) {
+        res.status(400).send(result.error.message);
+        return
+    }
+
     // console.log(!!result.error);  // error bor bo'lsa true yo'q bo'lsa false deydi
 
     // Obyektni yaratamiz yangi kitobni
     let book = {
         id: books.length + 1,
         name: req.body.name,
-        year: req.body.year
+        year: req.body.year,
+        img: req.body.img
     }
 
     // bazaga qo'shamiz
@@ -74,7 +90,8 @@ router.post('/add', authMiddleware, (req, res) => {
 
     // kitoblarni klientga qaytaramiz
     // res.status(201).send(allBooks)
-    res.status(201).send(book)
+    // res.status(201).send(book)
+    res.status(201).redirect('/api/books')
 })
 
 // PUT request

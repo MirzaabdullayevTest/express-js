@@ -1,0 +1,25 @@
+<h1>All books</h1>
+
+<div class="books">
+    <div class="row">
+        {{#each books}}
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-image">
+                    <img src={{img}} alt={{img}}>
+                    <span class="card-title">{{name}}</span>
+                </div>
+                <div class="card-content">
+                    <p>{{year}}</p>
+                </div>
+                <div class="card-action">
+                    <a href="#">This is a link</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+
+<a href="/api/books/add">Add book</a>

@@ -15,7 +15,11 @@ require('dotenv').config()
 
 const exhbs = create({
     extname: 'hbs',
-    defaultLayout: 'layout'
+    defaultLayout: 'layout',
+    runtimeOptions: {
+        allowProtoMethodsByDefault: true,
+        allowProtoPropertiesByDefault: true
+    }
 })
 
 // View engine
