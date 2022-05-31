@@ -2,15 +2,17 @@ const express = require('express')
 const router = express.Router()
 const Joi = require('joi')
 const authMiddleware = require('../middleware/auth')
+const Books = require('../model/Books')
 
-const books = [
-    { name: 'Atomic habits', year: 2000, id: 1 },
-    { name: 'Harry potter', year: 2008, id: 2 },
-    { name: 'Rich dad and poor dad', year: 2010, id: 3 },
-]
+// const books = [
+//     { name: 'Atomic habits', year: 2000, id: 1 },
+//     { name: 'Harry potter', year: 2008, id: 2 },
+//     { name: 'Rich dad and poor dad', year: 2010, id: 3 },
+// ]
 
 // View all books
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    const books = await Books.getAll()
     res.render('books', {
         title: 'All books',
         books,
@@ -56,9 +58,9 @@ router.get('/:id/:polka', (req, res) => {
 })
 
 // POST request
-router.post('/add', authMiddleware, (req, res) => {
+router.post('/add', authMiddleware, async (req, res) => {
     // Baza chaqiramiz
-    let allBooks = books  // []
+    // let allBooks = books  // []
 
     // Validatsiya // hiyalaymiz
     let bookSchema = Joi.object({
@@ -75,23 +77,35 @@ router.post('/add', authMiddleware, (req, res) => {
         return
     }
 
+    const book = new Books(
+        req.body.name,
+        req.body.year,
+        req.body.img
+    )
+
+    await book.save()
+    res.status(201).redirect('/api/books')
+
+
+
+
     // console.log(!!result.error);  // error bor bo'lsa true yo'q bo'lsa false deydi
 
     // Obyektni yaratamiz yangi kitobni
-    let book = {
-        id: books.length + 1,
-        name: req.body.name,
-        year: req.body.year,
-        img: req.body.img
-    }
+    // let book = {
+    //     id: books.length + 1,
+    //     name: req.body.name,
+    //     year: req.body.year,
+    //     img: req.body.img
+    // }
 
     // bazaga qo'shamiz
-    allBooks.push(book)
+    // allBooks.push(book)
 
     // kitoblarni klientga qaytaramiz
     // res.status(201).send(allBooks)
     // res.status(201).send(book)
-    res.status(201).redirect('/api/books')
+    // res.status(201).redirect('/api/books')
 })
 
 // PUT request

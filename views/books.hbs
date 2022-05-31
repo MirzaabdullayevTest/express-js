@@ -1,13 +1,14 @@
 <h1>All books</h1>
 
 <div class="books">
+    {{#if books}}
     <div class="row">
         {{#each books}}
         <div class="col s12 m4">
             <div class="card">
                 <div class="card-image">
-                    <img src={{img}} alt={{img}}>
-                    <span class="card-title">{{name}}</span>
+                    <img src="{img}}" alt="{{img}}">
+                    <span class=" card-title">{{name}}</span>
                 </div>
                 <div class="card-content">
                     <p>{{year}}</p>
@@ -19,6 +20,9 @@
         </div>
         {{/each}}
     </div>
+    {{else}}
+    <h2>Books are empty</h2>
+    {{/if}}
 </div>
 
 
