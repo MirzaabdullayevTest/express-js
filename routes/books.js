@@ -4,12 +4,6 @@ const Joi = require('joi')
 const authMiddleware = require('../middleware/auth')
 const Books = require('../model/Books')
 
-// const books = [
-//     { name: 'Atomic habits', year: 2000, id: 1 },
-//     { name: 'Harry potter', year: 2008, id: 2 },
-//     { name: 'Rich dad and poor dad', year: 2010, id: 3 },
-// ]
-
 // View all books
 router.get('/', async (req, res) => {
     const books = await Books.getAll()
@@ -27,6 +21,21 @@ router.get('/add', (req, res) => {
     })
 })
 
+// Get book by id
+router.get('/:id', async (req, res) => {
+    Books.findById(req.params.id)
+        .then(book => {
+            res.render('book', {
+                book,
+                title: book.name
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).redirect('/404')
+        })
+})
+
 // Get request with query
 router.get('/sort', (req, res) => {
     const book = books.find((book) => req.query.name === book.name)
@@ -40,22 +49,22 @@ router.get('/sort', (req, res) => {
 })
 
 // Get request with params
-router.get('/:id/:polka', (req, res) => {
-    // console.log(req.params.id);
-    // console.log(req.params.polka);
-    // Parametr aniqlanadi
-    const id = +req.params.id
-    // Parametrni tekshirish kerak
-    // Bazadan qidiriladi parametr bo'yicha
-    const book = books.find((book) => book.id === id)
-    if (book) {
-        // Clientga chiqariladi
-        res.status(200).send(book)
-    } else {
-        res.status(400).send('Bu parametrli kitob mavjud emas...')
-    }
+// router.get('/:id/:polka', (req, res) => {
+//     // console.log(req.params.id);
+//     // console.log(req.params.polka);
+//     // Parametr aniqlanadi
+//     const id = +req.params.id
+//     // Parametrni tekshirish kerak
+//     // Bazadan qidiriladi parametr bo'yicha
+//     const book = books.find((book) => book.id === id)
+//     if (book) {
+//         // Clientga chiqariladi
+//         res.status(200).send(book)
+//     } else {
+//         res.status(400).send('Bu parametrli kitob mavjud emas...')
+//     }
 
-})
+// })
 
 // POST request
 router.post('/add', authMiddleware, async (req, res) => {
@@ -85,27 +94,6 @@ router.post('/add', authMiddleware, async (req, res) => {
 
     await book.save()
     res.status(201).redirect('/api/books')
-
-
-
-
-    // console.log(!!result.error);  // error bor bo'lsa true yo'q bo'lsa false deydi
-
-    // Obyektni yaratamiz yangi kitobni
-    // let book = {
-    //     id: books.length + 1,
-    //     name: req.body.name,
-    //     year: req.body.year,
-    //     img: req.body.img
-    // }
-
-    // bazaga qo'shamiz
-    // allBooks.push(book)
-
-    // kitoblarni klientga qaytaramiz
-    // res.status(201).send(allBooks)
-    // res.status(201).send(book)
-    // res.status(201).redirect('/api/books')
 })
 
 // PUT request
@@ -134,11 +122,15 @@ router.put('/update/:id', authMiddleware, (req, res) => {
     res.status(200).send(updatedBook)
 })
 
-// Delete request
-router.delete('/delete/:id', authMiddleware, (req, res) => {
-    const idx = books.findIndex(book => book.id === +req.params.id)
-    books.splice(idx, 1)
-    res.status(200).send(books)
+// Remove book
+router.get('/remove/:id', authMiddleware, async (req, res) => {
+    const id = req.params.id
+    Books.removeById(id).then(() => {
+        res.redirect('/api/books')
+    }).catch(err => {
+        console.log(err)
+        res.redirect('/404')
+    })
 })
 
 function validateBody(body, bookSchema, res) {

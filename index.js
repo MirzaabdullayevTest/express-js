@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express() // object // {}
-const helmet = require('helmet')
+// const helmet = require('helmet')
 const morgan = require('morgan')
 const path = require('path')
 const { create } = require('express-handlebars')
@@ -39,7 +39,7 @@ app.use(express.json()) // json // requestlar uchun // req body ni json formatga
 app.use(express.urlencoded({ extended: true }))
 
 // HTTP headers security middleware
-app.use(helmet())
+// app.use(helmet())
 
 // Logger
 // console.log(app.get('env'));
@@ -52,9 +52,15 @@ if (process.env.NODE_ENV === 'development') {
 app.use(loggerMiddleware)
 
 // Routing
+app.use('/404', (req, res) => {
+    res.render('404', {
+        title: 404
+    })
+})
 app.use('/', homeRouter)
 app.use('/about', aboutRouter)
 app.use('/api/books', booksRouter)
+
 
 try {
     const port = process.env.PORT || 5000
