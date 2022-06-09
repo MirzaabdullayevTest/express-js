@@ -9,6 +9,7 @@ const { create } = require('express-handlebars')
 const homeRouter = require('./routes/home')
 const aboutRouter = require('./routes/about')
 const booksRouter = require('./routes/books')
+const cardRouter = require('./routes/card')
 
 // Dotenv
 require('dotenv').config()
@@ -57,9 +58,11 @@ app.use('/404', (req, res) => {
         title: 404
     })
 })
+
 app.use('/', homeRouter)
 app.use('/about', aboutRouter)
 app.use('/api/books', booksRouter)
+app.use('/api/card', cardRouter)
 
 
 try {

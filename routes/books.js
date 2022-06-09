@@ -45,7 +45,8 @@ router.post('/add', authMiddleware, async (req, res) => {
     let bookSchema = Joi.object({
         name: Joi.string().min(3).required(),
         year: Joi.number().integer().min(1900).max(2022).required(),
-        img: Joi.string()
+        img: Joi.string(),
+        price: Joi.number().integer().required()
     })
 
     const result = bookSchema.validate(req.body)
@@ -82,7 +83,8 @@ router.post('/update/', authMiddleware, async (req, res) => {
         name: Joi.string().min(3).required(),
         year: Joi.number().integer().min(1900).max(2022).required(),
         img: Joi.string(),
-        id: Joi.string()
+        id: Joi.string(),
+        price: Joi.number().integer().required()
     })
 
     validateBody(req.body, bookSchema, res)

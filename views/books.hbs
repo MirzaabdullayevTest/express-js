@@ -11,10 +11,15 @@
                     <span class=" card-title" style="color: black;">{{name}}</span>
                 </div>
                 <div class="card-content">
-                    <p>{{year}}</p>
+                    <p>{{price}} Сум</p>
                 </div>
-                <div class="card-action">
-                    <a href="/api/books/{{id}}">This is a link</a>
+                <div class="card-action" style="display: flex; justify-content: space-between; align-items: center;">
+                    <a href="/api/books/{{id}}">View book</a>
+
+                    <form action="/api/card/add" method="post">
+                        <input type="hidden" name="id" id="id" value="{{id}}">
+                        <button type="submit" class="btn">Buy</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -4,10 +4,11 @@ const path = require('path')
 const res = require('express/lib/response')
 
 class Books {
-    constructor(name, year, img) {
+    constructor(name, year, img, price) {
         this.name = name
         this.year = year
         this.img = img
+        this.price = price
     }
 
     toObj() {
@@ -15,7 +16,8 @@ class Books {
             name: this.name,
             year: +this.year,
             img: this.img,
-            id: uuid()
+            id: uuid(),
+            price: +this.price
         }
     }
 

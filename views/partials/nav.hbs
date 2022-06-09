@@ -11,6 +11,11 @@
       {{else}}
       <li><a href="/api/books">Books</a></li>
       {{/if}}
+      {{#if isCard}}
+      <li class="active"><a href="/api/card">Shopping card</a></li>
+      {{else}}
+      <li><a href="/api/card">Shopping card</a></li>
+      {{/if}}
       {{#if isAbout}}
       <li class="active"><a href="/about">About us</a></li>
       {{else}}
