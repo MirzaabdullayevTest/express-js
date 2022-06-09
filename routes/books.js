@@ -36,36 +36,6 @@ router.get('/:id', async (req, res) => {
         })
 })
 
-// Get request with query
-router.get('/sort', (req, res) => {
-    const book = books.find((book) => req.query.name === book.name)
-    // const book = books.find((book) => +req.query.id === book.id)
-    if (book) {
-        // Clientga chiqariladi
-        res.status(200).send(book)
-    } else {
-        res.status(400).send('Bu ismli kitob mavjud emas...')
-    }
-})
-
-// Get request with params
-// router.get('/:id/:polka', (req, res) => {
-//     // console.log(req.params.id);
-//     // console.log(req.params.polka);
-//     // Parametr aniqlanadi
-//     const id = +req.params.id
-//     // Parametrni tekshirish kerak
-//     // Bazadan qidiriladi parametr bo'yicha
-//     const book = books.find((book) => book.id === id)
-//     if (book) {
-//         // Clientga chiqariladi
-//         res.status(200).send(book)
-//     } else {
-//         res.status(400).send('Bu parametrli kitob mavjud emas...')
-//     }
-
-// })
-
 // POST request
 router.post('/add', authMiddleware, async (req, res) => {
     // Baza chaqiramiz
@@ -73,7 +43,7 @@ router.post('/add', authMiddleware, async (req, res) => {
 
     // Validatsiya // hiyalaymiz
     let bookSchema = Joi.object({
-        name: Joi.string().min(3).max(30).required(),
+        name: Joi.string().min(3).required(),
         year: Joi.number().integer().min(1900).max(2022).required(),
         img: Joi.string()
     })
@@ -96,30 +66,29 @@ router.post('/add', authMiddleware, async (req, res) => {
     res.status(201).redirect('/api/books')
 })
 
-// PUT request
-router.put('/update/:id', authMiddleware, (req, res) => {
-    let allBooks = books
-    // id orqali yangilanmoqchi bo'lgan obj ni index kalitini topamiz
-    const idx = allBooks.findIndex(book => book.id === +req.params.id)
-    // yangi obj ni idx joylaymiz // [idx] = {newObj}
+router.get('/update/:id', authMiddleware, async (req, res) => {
+    const oldBook = await Books.findById(req.params.id)
 
+    res.render('updateBook', {
+        oldBook,
+        title: oldBook.name
+    })
+})
+
+// Update book
+router.post('/update/', authMiddleware, async (req, res) => {
     // Validatsiya // hiyalaymiz
     let bookSchema = Joi.object({
-        name: Joi.string().min(3).max(30).required(),
+        name: Joi.string().min(3).required(),
         year: Joi.number().integer().min(1900).max(2022).required(),
+        img: Joi.string(),
+        id: Joi.string()
     })
 
     validateBody(req.body, bookSchema, res)
 
-    let updatedBook = {
-        name: req.body.name,
-        year: req.body.year,
-        id: +req.params.id,
-    }
-
-    allBooks[idx] = updatedBook
-
-    res.status(200).send(updatedBook)
+    await Books.updateById(req.body.id, req.body)
+    res.redirect('/api/books')
 })
 
 // Remove book

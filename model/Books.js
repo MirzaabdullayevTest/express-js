@@ -59,6 +59,29 @@ class Books {
         })
     }
 
+    static async updateById(id, body) {
+        let books = await Books.getAll() // []
+
+        return new Promise((resolve, reject) => {
+            let idx = books.findIndex(book => book.id === id)
+            if (idx === -1) {
+                return reject('Book id is not true')
+            }
+
+            body.id = id
+
+            books[idx] = body
+
+            fs.writeFile(
+                path.join(__dirname, '..', 'data', 'books.json'),
+                JSON.stringify({ books }),
+                (err) => {
+                    if (err) reject(err)
+                    else resolve()
+                })
+        })
+    }
+
     static async removeById(id) {
         let books = await Books.getAll()
         return new Promise((resolve, reject) => {
