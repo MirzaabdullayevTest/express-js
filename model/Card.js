@@ -4,7 +4,6 @@ const path = require('path')
 const dir = path.join(__dirname, '..', 'data', 'card.json')
 
 class Card {
-
     static async add(book) {
         let card = await Card.getCard()
         const idx = card.books.findIndex(item => item.id === book.id) // agar yo'q bo'sa -1
@@ -36,6 +35,30 @@ class Card {
                 else res(JSON.parse(data))
             })
         })
+    }
+
+    static async removeById(id) {
+        const card = await Card.getCard() // {books[], price}
+
+        const idx = card.books.findIndex(book => book.id === id)
+
+        card.price = card.price - +card.books[idx].price
+
+        if (card.books[idx].count === 1) {
+            // demak kitob soni 1 ta uni baza o'chiramiz
+            card.books = card.books.filter(book => book.id !== id)
+        } else {
+            // demak kitob 1 tadan ko'p uni sonini 1 ga kamaytiramiz
+            card.books[idx].count--
+        }
+
+        return new Promise((res, rej) => {
+            fs.writeFile(dir, JSON.stringify(card), (err) => {
+                if (err) rej(err)
+                else res(card)
+            })
+        })
+
     }
 }
 
